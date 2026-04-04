@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoffeeBean Quality Classifier</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0b08;
+    --bg2: #161009;
+    --surface: #1e1710;
+    --surface2: #2a2016;
+    --border: #3a2e1e;
+    --border2: #4a3c28;
+    --cream: #f5ead8;
+    --cream2: #e8d5b5;
+    --amber: #c8892a;
+    --amber2: #e0a040;
+    --brown: #8b5e3c;
+    --green: #4a7c59;
+    --green2: #5a9c6e;
+    --muted: #7a6a55;
+    --text: #f0e6d3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* Header */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--amber);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+  }
+
+  .logo-text span {
+    color: var(--amber);
+  }
+
+  .header-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 5rem 2.5rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .hero-label::before, .hero-label::after {
+    content: '';
+    height: 1px;
+    width: 40px;
+    background: var(--border2);
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    line-height: 1.1;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+  }
+
+  h1 em {
+    color: var(--amber);
+    font-style: italic;
+  }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto 0.75rem;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--border2);
+    border-radius: 2rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .badge.accent {
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  /* Main layout */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    animation: fadeUp 0.7s ease 0.2s both;
+  }
+
+  @media (max-width: 768px) {
+    main { grid-template-columns: 1fr; padding: 1.5rem 1.25rem 4rem; }
+    header { padding: 1.25rem; }
+    .hero { padding: 3rem 1.25rem 2rem; }
+    h1 { font-size: 2rem; }
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .card-header-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+  }
+
+  .card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--cream2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .card-body { padding: 1.5rem; }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 1.5px dashed var(--border2);
+    border-radius: 8px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    background: var(--bg2);
+  }
+
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--amber);
+    background: rgba(200, 137, 42, 0.05);
+  }
+
+  .upload-zone input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .upload-text {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .upload-text strong {
+    color: var(--amber);
+    font-weight: 500;
+  }
+
+  /* Preview */
+  #preview-wrap {
+    display: none;
+    margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+
+  #preview-wrap img {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .preview-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(14,11,8,0.85);
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+
+  .preview-remove:hover { color: var(--cream); }
+
+  /* Classify btn */
+  #classify-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.9rem;
+    background: var(--amber);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: none;
+    letter-spacing: 0.02em;
+  }
+
+  #classify-btn:hover { background: var(--amber2); transform: translateY(-1px); }
+  #classify-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Model status */
+  .model-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 1rem;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border2);
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+
+  .status-dot.loading { background: var(--amber); animation: pulse 1s infinite; }
+  .status-dot.ready { background: var(--green2); }
+  .status-dot.error { background: #c0392b; }
+
+  /* Result card */
+  #result-card { display: none; }
+
+  .result-grade {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .result-label {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .result-label span {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    font-style: normal;
+  }
+
+  .result-confidence {
+    text-align: right;
+  }
+
+  .confidence-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 2rem;
+    color: var(--amber);
+    line-height: 1;
+  }
+
+  .confidence-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  /* Grade info box */
+  .grade-info {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--amber);
+  }
+
+  .grade-info-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .grade-info-desc {
+    font-size: 0.85rem;
+    color: var(--cream2);
+    line-height: 1.6;
+  }
+
+  /* Confidence bars */
+  .bars-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.85rem;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .bar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    width: 52px;
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--border2);
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  .bar-fill.top { background: var(--amber); }
+
+  .bar-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    width: 38px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* SNI Reference */
+  .sni-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .sni-table tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .sni-table tr:last-child { border-bottom: none; }
+  .sni-table tr:hover { background: var(--surface2); }
+  .sni-table tr.active-grade { background: rgba(200,137,42,0.08); }
+
+  .sni-table td {
+    padding: 0.75rem 0;
+    font-size: 0.82rem;
+    vertical-align: top;
+  }
+
+  .sni-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    color: var(--amber);
+    font-size: 0.72rem;
+    width: 80px;
+    padding-right: 0.75rem;
+  }
+
+  .sni-grade-name {
+    color: var(--cream2);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .sni-grade-desc {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  /* About card - full width */
+  .card.full { grid-column: 1 / -1; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 600px) { .about-grid { grid-template-columns: 1fr; } }
+
+  .about-item-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .about-item-val {
+    font-size: 0.85rem;
+    color: var(--cream2);
+    line-height: 1.6;
+  }
+
+  .about-item-val a {
+    color: var(--amber);
+    text-decoration: none;
+  }
+
+  .about-item-val a:hover { text-decoration: underline; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--amber); }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--border2);
+    border-top-color: var(--amber);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 0.4rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">☕</div>
+    <div class="logo-text">CoffeeBean <span>Quality Classifier</span></div>
+  </div>
+  <div class="header-meta">
+    ViT-B/16 · ImageNet Pretrained<br>
+    Arabica · SNI Standard · 6 Classes
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Vision Transformer Research Demo</div>
+  <h1>Classify Arabica Bean<br>Quality <em>Instantly</em></h1>
+  <p class="hero-sub">Upload a photo of Arabica coffee beans and get instant quality classification based on the Indonesian National Standard (SNI) defect value system — powered by ViT-B/16 running entirely in your browser.</p>
+  <div class="hero-badges">
+    <span class="badge accent">91.67% Accuracy</span>
+    <span class="badge">No Server · 100% Client-side</span>
+    <span class="badge">ViT-B/16 · ONNX</span>
+    <span class="badge">6 SNI Grades</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- Upload Card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-dot"></div>
+      <div class="card-title">Image Input</div>
+    </div>
+    <div class="card-body">
+      <div class="upload-zone" id="drop-zone">
+        <input type="file" id="file-input" accept="image/*">
+        <span class="upload-icon">⬆</span>
+        <div class="upload-text">
+          <strong>Click to upload</strong> or drag & drop<br>
+          JPG, PNG, WEBP — any size
+        </div>
+      </div>
+
+      <div id="preview-wrap">
+        <img id="preview-img" src="" alt="Preview">
+        <button class="preview-remove" id="remove-btn">✕</button>
+      </div>
+
+      <button id="classify-btn">Classify Bean Quality</button>
+
+      <div class="model-status">
+        <div class="status-dot loading" id="status-dot"></div>
+        <span id="status-text">Loading model from HuggingFace Hub…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Card -->
+  <div class="card" id="result-card">
+    <div class="card-header">
+      <div class="card-header-dot"></div>
+      <div class="card-title">Classification Result</div>
+    </div>
+    <div class="card-body">
+      <div class="result-grade">
+        <div class="result-label" id="result-grade-label">
+          —
+          <span id="result-grade-sub">Awaiting classification</span>
+        </div>
+        <div class="result-confidence">
+          <div class="confidence-num" id="result-conf">—</div>
+          <div class="confidence-label">confidence</div>
+        </div>
+      </div>
+
+      <div class="grade-info" id="grade-info-box">
+        <div class="grade-info-title">SNI Standard</div>
+        <div class="grade-info-desc" id="grade-info-text">Upload an image and click classify to see results.</div>
+      </div>
+
+      <div class="bars-title">All Class Probabilities</div>
+      <div id="bars-container">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SNI Reference Card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-dot"></div>
+      <div class="card-title">SNI Quality Reference</div>
+    </div>
+    <div class="card-body">
+      <table class="sni-table" id="sni-table">
+        <tbody>
+          <tr data-grade="mutu1">
+            <td>mutu1</td>
+            <td><span class="sni-grade-name">Specialty Grade</span><span class="sni-grade-desc">0 defects per 300g sample. Exceptional quality, no defects allowed.</span></td>
+          </tr>
+          <tr data-grade="mutu2">
+            <td>mutu2</td>
+            <td><span class="sni-grade-name">Grade 1</span><span class="sni-grade-desc">Max 11 defect values. Excellent quality with minimal defects.</span></td>
+          </tr>
+          <tr data-grade="mutu3">
+            <td>mutu3</td>
+            <td><span class="sni-grade-name">Grade 2</span><span class="sni-grade-desc">12–25 defect values. Good quality, suitable for specialty market.</span></td>
+          </tr>
+          <tr data-grade="mutu4">
+            <td>mutu4</td>
+            <td><span class="sni-grade-name">Grade 3</span><span class="sni-grade-desc">26–44 defect values. Standard commercial quality.</span></td>
+          </tr>
+          <tr data-grade="mutu5">
+            <td>mutu5</td>
+            <td><span class="sni-grade-name">Grade 4a</span><span class="sni-grade-desc">45–60 defect values. Below standard, limited commercial use.</span></td>
+          </tr>
+          <tr data-grade="mutu6">
+            <td>mutu6</td>
+            <td><span class="sni-grade-name">Grade 4b</span><span class="sni-grade-desc">61–80 defect values. Low quality, significant defects present.</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- About Card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-dot"></div>
+      <div class="card-title">About This Model</div>
+    </div>
+    <div class="card-body">
+      <div class="about-grid">
+        <div class="about-item">
+          <div class="about-item-label">Architecture</div>
+          <div class="about-item-val">Vision Transformer B/16<br>ImageNet-21k pretrained<br>Fine-tuned on Arabica beans</div>
+        </div>
+        <div class="about-item">
+          <div class="about-item-label">Performance</div>
+          <div class="about-item-val">91.67% prediction accuracy<br>Train:Test ratio 70:30<br>+5% vs MobileNetV2 baseline</div>
+        </div>
+        <div class="about-item">
+          <div class="about-item-label">Links</div>
+          <div class="about-item-val">
+            <a href="https://github.com/zaafirrahman/coffeebean_quality_vit" target="_blank">GitHub Repo</a><br>
+            <a href="https://huggingface.co/zaafirrahman/coffeebean-quality-vit" target="_blank">HuggingFace Hub</a><br>
+            <a href="https://www.kaggle.com/datasets/zaafirrahman/arabica-beans" target="_blank">Kaggle Dataset</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-text">Aulya Az Zaafirrahman · Agroindustrial Engineering · Universitas Brawijaya · 2024</div>
+  <div class="footer-links">
+    <a href="https://github.com/zaafirrahman/coffeebean_quality_vit/releases" target="_blank">Thesis PDF</a>
+    <a href="https://huggingface.co/zaafirrahman/coffeebean-quality-vit" target="_blank">Model Card</a>
+    <a href="https://www.kaggle.com/datasets/zaafirrahman/arabica-beans" target="_blank">Dataset</a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+<script>
+const CLASS_NAMES = ['mutu1','mutu2','mutu3','mutu4','mutu5','mutu6'];
+const GRADE_INFO = {
+  mutu1: { name: 'Specialty Grade', desc: 'Zero defects per 300g sample. The highest possible quality — beans are visually perfect, uniform in size and color, with no physical defects whatsoever.' },
+  mutu2: { name: 'Grade 1', desc: 'Maximum 11 defect values per 300g. Excellent quality with only trace defects, suitable for the specialty coffee market.' },
+  mutu3: { name: 'Grade 2', desc: '12 to 25 defect values per 300g. Good quality with minor defects, still suitable for premium commercial and specialty use.' },
+  mutu4: { name: 'Grade 3', desc: '26 to 44 defect values per 300g. Standard commercial quality. Acceptable for most commercial coffee products.' },
+  mutu5: { name: 'Grade 4a', desc: '45 to 60 defect values per 300g. Below standard commercial quality. Significant defects present, limited market applications.' },
+  mutu6: { name: 'Grade 4b', desc: '61 to 80 defect values per 300g. Low quality with widespread defects. Suitable only for low-grade commercial blending.' },
+};
+
+const HF_BASE = 'https://huggingface.co/zaafirrahman/coffeebean-quality-vit/resolve/main';
+const MODEL_URL = `${HF_BASE}/coffeebean_vit_best.onnx`;
+const MODEL_DATA_URL = `${HF_BASE}/coffeebean_vit_best.onnx.data`;
+
+let session = null;
+let currentFile = null;
+
+const statusDot = document.getElementById('status-dot');
+const statusText = document.getElementById('status-text');
+const fileInput = document.getElementById('file-input');
+const dropZone = document.getElementById('drop-zone');
+const previewWrap = document.getElementById('preview-wrap');
+const previewImg = document.getElementById('preview-img');
+const removeBtn = document.getElementById('remove-btn');
+const classifyBtn = document.getElementById('classify-btn');
+const resultCard = document.getElementById('result-card');
+
+function setStatus(state, text) {
+  statusDot.className = 'status-dot ' + state;
+  statusText.innerHTML = text;
+}
+
+async function loadModel() {
+  try {
+    setStatus('loading', '<span class="spinner"></span>Downloading model (~343 MB)… first load only');
+    ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
+    session = await ort.InferenceSession.create(MODEL_URL, {
+      executionProviders: ['wasm'],
+    });
+    setStatus('ready', 'Model ready — running in your browser');
+    if (currentFile) classifyBtn.style.display = 'block';
+  } catch (e) {
+    setStatus('error', 'Failed to load model. Check your connection.');
+    console.error(e);
+  }
+}
+
+// Preprocess image → Float32 tensor [1,3,224,224] with ImageNet normalization
+async function preprocessImage(file) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 224; canvas.height = 224;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, 224, 224);
+      const { data } = ctx.getImageData(0, 0, 224, 224);
+      const mean = [0.485, 0.456, 0.406];
+      const std  = [0.229, 0.224, 0.225];
+      const tensor = new Float32Array(1 * 3 * 224 * 224);
+      for (let i = 0; i < 224 * 224; i++) {
+        tensor[0 * 224 * 224 + i] = ((data[i*4+0]/255) - mean[0]) / std[0];
+        tensor[1 * 224 * 224 + i] = ((data[i*4+1]/255) - mean[1]) / std[1];
+        tensor[2 * 224 * 224 + i] = ((data[i*4+2]/255) - mean[2]) / std[2];
+      }
+      resolve(new ort.Tensor('float32', tensor, [1, 3, 224, 224]));
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function softmax(arr) {
+  const max = Math.max(...arr);
+  const exp = arr.map(x => Math.exp(x - max));
+  const sum = exp.reduce((a,b) => a+b, 0);
+  return exp.map(x => x/sum);
+}
+
+function setFile(file) {
+  currentFile = file;
+  const url = URL.createObjectURL(file);
+  previewImg.src = url;
+  previewWrap.style.display = 'block';
+  dropZone.style.display = 'none';
+  if (session) classifyBtn.style.display = 'block';
+  resultCard.style.display = 'none';
+}
+
+function clearFile() {
+  currentFile = null;
+  previewWrap.style.display = 'none';
+  dropZone.style.display = 'block';
+  classifyBtn.style.display = 'none';
+  resultCard.style.display = 'none';
+  fileInput.value = '';
+}
+
+async function classify() {
+  if (!session || !currentFile) return;
+  classifyBtn.disabled = true;
+  classifyBtn.innerHTML = '<span class="spinner"></span>Classifying…';
+
+  try {
+    const tensor = await preprocessImage(currentFile);
+    const feeds = { input: tensor };
+    const results = await session.run(feeds);
+    const logits = Array.from(results.output.data);
+    const probs = softmax(logits);
+
+    const topIdx = probs.indexOf(Math.max(...probs));
+    const topClass = CLASS_NAMES[topIdx];
+    const topConf = (probs[topIdx] * 100).toFixed(1);
+    const info = GRADE_INFO[topClass];
+
+    // Show result card
+    resultCard.style.display = 'block';
+    document.getElementById('result-grade-label').innerHTML =
+      `${topClass} <span>${info.name}</span>`;
+    document.getElementById('result-conf').textContent = topConf + '%';
+    document.getElementById('grade-info-text').textContent = info.desc;
+
+    // Highlight SNI table
+    document.querySelectorAll('#sni-table tr').forEach(tr => {
+      tr.classList.toggle('active-grade', tr.dataset.grade === topClass);
+    });
+
+    // Bars
+    const barsContainer = document.getElementById('bars-container');
+    barsContainer.innerHTML = '';
+    CLASS_NAMES.forEach((cls, i) => {
+      const pct = (probs[i] * 100).toFixed(1);
+      const isTop = i === topIdx;
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `
+        <div class="bar-label">${cls}</div>
+        <div class="bar-track"><div class="bar-fill${isTop?' top':''}" data-pct="${pct}"></div></div>
+        <div class="bar-pct">${pct}%</div>
+      `;
+      barsContainer.appendChild(row);
+    });
+
+    // Animate bars
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.bar-fill').forEach(el => {
+        el.style.width = el.dataset.pct + '%';
+      });
+    });
+
+  } catch(e) {
+    alert('Classification failed: ' + e.message);
+    console.error(e);
+  }
+
+  classifyBtn.disabled = false;
+  classifyBtn.innerHTML = 'Classify Again';
+}
+
+// Events
+fileInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+removeBtn.addEventListener('click', clearFile);
+classifyBtn.addEventListener('click', classify);
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+});
+
+// Init
+loadModel();
+</script>
+</body>
+</html>
