@@ -1009,7 +1009,7 @@ async function classify() {
     const topClass = CLASS_NAMES[topIdx];
     const topConf = (probs[topIdx] * 100).toFixed(1);
     const info = GRADE_INFO[topClass];
-    const displayClass = topClass.replace('mutu', 'Mutu_');
+    const displayClass = topClass.replace('mutu', 'Mutu-');
 
     // Show result card
     resultCard.style.display = 'block';
