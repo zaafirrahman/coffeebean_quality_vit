@@ -683,42 +683,42 @@
           <div class="sample-item" onclick="loadSample('assets/sample-mutu1.jpg')">
             <img src="assets/sample-mutu1.jpg" alt="Mutu 1">
             <div class="sample-label">
-              <div style="color:var(--amber)">mutu1</div>
+              <div style="color:var(--amber)">Mutu1</div>
               <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Specialty</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu2.jpg')">
             <img src="assets/sample-mutu2.jpg" alt="Mutu 2">
             <div class="sample-label">
-              <div style="color:var(--amber)">mutu2</div>
+              <div style="color:var(--amber)">Mutu2</div>
               <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 1</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu3.jpg')">
             <img src="assets/sample-mutu3.jpg" alt="Mutu 3">
             <div class="sample-label">
-              <div style="color:var(--amber)">mutu3</div>
+              <div style="color:var(--amber)">Mutu3</div>
               <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 2</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu4.jpg')">
             <img src="assets/sample-mutu4.jpg" alt="Mutu 4">
             <div class="sample-label">
-              <div style="color:var(--amber)">mutu4</div>
+              <div style="color:var(--amber)">Mutu4</div>
               <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 3</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu5.jpg')">
             <img src="assets/sample-mutu5.jpg" alt="Mutu 5">
             <div class="sample-label">
-              <div style="color:var(--amber)">mutu5</div>
+              <div style="color:var(--amber)">Mutu5</div>
               <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4a</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu6.jpg')">
             <img src="assets/sample-mutu6.jpg" alt="Mutu 6">
                         <div class="sample-label">
-              <div style="color:var(--amber)">mutu6</div>
+              <div style="color:var(--amber)">Mutu6</div>
               <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4b</div> -->
             </div>
           </div>
@@ -777,28 +777,28 @@
       <table class="sni-table" id="sni-table">
         <tbody>
           <tr data-grade="mutu1">
-            <td>mutu1</td>
-            <td><span class="sni-grade-name">Specialty Grade</span><span class="sni-grade-desc">0 defects per 300g sample. Exceptional quality, no defects allowed.</span></td>
+            <td>Mutu1</td>
+            <td><span class="sni-grade-name">Grade 1</span><span class="sni-grade-desc">Max 11 defect values per 300g sample. Exceptional quality, almost no defects allowed.</span></td>
           </tr>
           <tr data-grade="mutu2">
-            <td>mutu2</td>
-            <td><span class="sni-grade-name">Grade 1</span><span class="sni-grade-desc">Max 11 defect values. Excellent quality with minimal defects.</span></td>
+            <td>Mutu2</td>
+            <td><span class="sni-grade-name">Grade 2</span><span class="sni-grade-desc">12–25 defect values. Excellent quality with minimal defects.</span></td>
           </tr>
           <tr data-grade="mutu3">
-            <td>mutu3</td>
-            <td><span class="sni-grade-name">Grade 2</span><span class="sni-grade-desc">12–25 defect values. Good quality, suitable for specialty market.</span></td>
+            <td>Mutu3</td>
+            <td><span class="sni-grade-name">Grade 3</span><span class="sni-grade-desc">26–44 defect values. Good quality, suitable for specialty market.</span></td>
           </tr>
           <tr data-grade="mutu4">
-            <td>mutu4</td>
-            <td><span class="sni-grade-name">Grade 3</span><span class="sni-grade-desc">26–44 defect values. Standard commercial quality.</span></td>
+            <td>Mutu4</td>
+            <td><span class="sni-grade-name">Grade 4</span><span class="sni-grade-desc">45–80 defect values. Standard commercial quality.</span></td>
           </tr>
           <tr data-grade="mutu5">
-            <td>mutu5</td>
-            <td><span class="sni-grade-name">Grade 4a</span><span class="sni-grade-desc">45–60 defect values. Below standard, limited commercial use.</span></td>
+            <td>Mutu5</td>
+            <td><span class="sni-grade-name">Grade 5</span><span class="sni-grade-desc">81–150 defect values. Below standard, limited commercial use.</span></td>
           </tr>
           <tr data-grade="mutu6">
-            <td>mutu6</td>
-            <td><span class="sni-grade-name">Grade 4b</span><span class="sni-grade-desc">61–80 defect values. Low quality, significant defects present.</span></td>
+            <td>Mutu6</td>
+            <td><span class="sni-grade-name">Grade 6</span><span class="sni-grade-desc">151–225 defect values. Low quality, significant defects present.</span></td>
           </tr>
         </tbody>
       </table>
@@ -864,14 +864,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 <script>
-const CLASS_NAMES = ['mutu1','mutu2','mutu3','mutu4','mutu5','mutu6'];
+const CLASS_NAMES = ['Mutu_1','Mutu_2','Mutu_3','Mutu_4','Mutu_5','Mutu_6'];
 const GRADE_INFO = {
-  mutu1: { name: 'Specialty Grade', desc: 'Zero defects per 300g sample. The highest possible quality — beans are visually perfect, uniform in size and color, with no physical defects whatsoever.' },
-  mutu2: { name: 'Grade 1', desc: 'Maximum 11 defect values per 300g. Excellent quality with only trace defects, suitable for the specialty coffee market.' },
-  mutu3: { name: 'Grade 2', desc: '12 to 25 defect values per 300g. Good quality with minor defects, still suitable for premium commercial and specialty use.' },
-  mutu4: { name: 'Grade 3', desc: '26 to 44 defect values per 300g. Standard commercial quality. Acceptable for most commercial coffee products.' },
-  mutu5: { name: 'Grade 4a', desc: '45 to 60 defect values per 300g. Below standard commercial quality. Significant defects present, limited market applications.' },
-  mutu6: { name: 'Grade 4b', desc: '61 to 80 defect values per 300g. Low quality with widespread defects. Suitable only for low-grade commercial blending.' },
+  mutu1: { name: 'Grade 1', desc: 'Maximum 11 defect values per 300g. The highest possible quality — beans are visually perfect, uniform in size and color, with almost no physical defects.' },
+  mutu2: { name: 'Grade 2', desc: '12 to 25 defect values per 300g. Excellent quality with only trace defects, suitable for the specialty coffee market.' },
+  mutu3: { name: 'Grade 3', desc: '26 to 44 defect values per 300g. Good quality with minor defects, still suitable for premium commercial and specialty use.' },
+  mutu4: { name: 'Grade 4', desc: '45 to 80 defect values per 300g. Standard commercial quality. Acceptable for most commercial coffee products.' },
+  mutu5: { name: 'Grade 5', desc: '81 to 150 defect values per 300g. Below standard commercial quality. Significant defects present, limited market applications.' },
+  mutu6: { name: 'Grade 6', desc: '151 to 225 defect values per 300g. Low quality with widespread defects. Suitable only for low-grade commercial blending.' },
 };
 
 const HF_BASE = 'https://huggingface.co/zaafirrahman/coffeebean-quality-vit/resolve/main';
