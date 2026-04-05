@@ -566,6 +566,29 @@
 
   .footer-links a:hover { color: var(--amber); }
 
+  .sample-item {
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .sample-item:hover { border-color: var(--amber); transform: scale(1.03); }
+  .sample-item img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+  }
+  .sample-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--amber);
+    padding: 0.3rem 0.5rem;
+    background: var(--surface2);
+  }
+  .sample-label span { color: var(--muted); margin-left: 0.3rem; }
+
   /* Animations */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
@@ -635,7 +658,7 @@
     <div class="card-body">
       <div class="upload-zone" id="drop-zone">
         <input type="file" id="file-input" accept="image/*">
-        <span class="upload-icon">⬆</span>
+        <!-- <span class="upload-icon">⬆</span> -->
         <div class="upload-text">
           <strong>Click to upload</strong> or drag & drop<br>
           JPG, PNG, WEBP — any size
@@ -645,6 +668,60 @@
       <div id="preview-wrap">
         <img id="preview-img" src="" alt="Preview">
         <button class="preview-remove" id="remove-btn">✕</button>
+      </div>
+
+      <!-- Sample Images Section -->
+      <div style="margin-top:1.25rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.75rem;">
+          Try a sample — click to load
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0.4rem;">
+          <div class="sample-item" onclick="loadSample('assets/sample-mutu1.jpg')">
+            <img src="assets/sample-mutu1.jpg" alt="Mutu 1">
+            <div class="sample-label">
+              <div style="color:var(--amber)">mutu1</div>
+              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Specialty</div>
+            </div>
+          </div>
+          <div class="sample-item" onclick="loadSample('assets/sample-mutu2.jpg')">
+            <img src="assets/sample-mutu2.jpg" alt="Mutu 2">
+            <div class="sample-label">
+              <div style="color:var(--amber)">mutu2</div>
+              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 1</div>
+            </div>
+          </div>
+          <div class="sample-item" onclick="loadSample('assets/sample-mutu3.jpg')">
+            <img src="assets/sample-mutu3.jpg" alt="Mutu 3">
+            <div class="sample-label">
+              <div style="color:var(--amber)">mutu3</div>
+              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 2</div>
+            </div>
+          </div>
+          <div class="sample-item" onclick="loadSample('assets/sample-mutu4.jpg')">
+            <img src="assets/sample-mutu4.jpg" alt="Mutu 4">
+            <div class="sample-label">
+              <div style="color:var(--amber)">mutu4</div>
+              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 3</div>
+            </div>
+          </div>
+          <div class="sample-item" onclick="loadSample('assets/sample-mutu5.jpg')">
+            <img src="assets/sample-mutu5.jpg" alt="Mutu 5">
+            <div class="sample-label">
+              <div style="color:var(--amber)">mutu5</div>
+              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4a</div>
+            </div>
+          </div>
+          <div class="sample-item" onclick="loadSample('assets/sample-mutu6.jpg')">
+            <img src="assets/sample-mutu6.jpg" alt="Mutu 6">
+                        <div class="sample-label">
+              <div style="color:var(--amber)">mutu6</div>
+              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4b</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:0.6rem;text-align:center;">
+          ⚠ Only works with <strong style="color:var(--amber)">raw green Arabica beans</strong> — not roasted, ground, or brewed
+        </div>
       </div>
 
       <button id="classify-btn">Classify Bean Quality</button>
@@ -743,6 +820,7 @@
         <div class="about-item">
           <div class="about-item-label">Links</div>
           <div class="about-item-val">
+            <a href="https://github.com/zaafirrahman/coffeebean_quality_vit/releases" target="_blank">Thesis Article</a><br>
             <a href="https://github.com/zaafirrahman/coffeebean_quality_vit" target="_blank">GitHub Repo</a><br>
             <a href="https://huggingface.co/zaafirrahman/coffeebean-quality-vit" target="_blank">HuggingFace Hub</a><br>
             <a href="https://www.kaggle.com/datasets/zaafirrahman/arabica-beans" target="_blank">Kaggle Dataset</a>
@@ -775,9 +853,8 @@ const GRADE_INFO = {
   mutu6: { name: 'Grade 4b', desc: '61 to 80 defect values per 300g. Low quality with widespread defects. Suitable only for low-grade commercial blending.' },
 };
 
-const HF_BASE = 'https://hf.co/zaafirrahman/coffeebean-quality-vit/resolve/main';
-const MODEL_URL = `${HF_BASE}/coffeebean_vit_best.onnx`;
-const MODEL_DATA_URL = `${HF_BASE}/coffeebean_vit_best.onnx.data`;
+const HF_BASE = 'https://huggingface.co/zaafirrahman/coffeebean-quality-vit/resolve/main';
+const MODEL_URL = `${HF_BASE}/coffeebean_vit_final.onnx`;
 
 let session = null;
 let currentFile = null;
@@ -860,6 +937,20 @@ function clearFile() {
   classifyBtn.style.display = 'none';
   resultCard.style.display = 'none';
   fileInput.value = '';
+}
+
+async function loadSample(path) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error('fetch failed');
+    const blob = await res.blob();
+    const filename = path.split('/').pop();
+    const file = new File([blob], filename, { type: blob.type });
+    setFile(file);
+  } catch(e) {
+    alert('Could not load sample. Try uploading the image manually.');
+    console.error(e);
+  }
 }
 
 async function classify() {
