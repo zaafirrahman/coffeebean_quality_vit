@@ -875,7 +875,7 @@ const GRADE_INFO = {
 };
 
 const HF_BASE = 'https://huggingface.co/zaafirrahman/coffeebean-quality-vit/resolve/main';
-const MODEL_URL = `${HF_BASE}/coffeebean_vit_final.onnx`;
+const MODEL_URL = `${HF_BASE}/coffeebean_vit_final_fp16.onnx`;
 
 let session = null;
 let currentFile = null;
@@ -897,7 +897,7 @@ function setStatus(state, text) {
 
 async function loadModel() {
   try {
-    setStatus('loading', '<span class="spinner"></span>Downloading model (~343 MB)… first load only');
+    setStatus('loading', '<span class="spinner"></span>Downloading model (may take a few seconds...)');
     ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
     session = await ort.InferenceSession.create(MODEL_URL, {
       executionProviders: ['wasm'],
