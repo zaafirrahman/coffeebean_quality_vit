@@ -864,7 +864,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 <script>
-const CLASS_NAMES = ['Mutu_1','Mutu_2','Mutu_3','Mutu_4','Mutu_5','Mutu_6'];
+const CLASS_NAMES = ['mutu1','mutu2','mutu3','mutu4','mutu5','mutu6'];
 const GRADE_INFO = {
   mutu1: { name: 'Grade 1', desc: 'Maximum 11 defect values per 300g. The highest possible quality — beans are visually perfect, uniform in size and color, with almost no physical defects.' },
   mutu2: { name: 'Grade 2', desc: '12 to 25 defect values per 300g. Excellent quality with only trace defects, suitable for the specialty coffee market.' },
@@ -1009,11 +1009,12 @@ async function classify() {
     const topClass = CLASS_NAMES[topIdx];
     const topConf = (probs[topIdx] * 100).toFixed(1);
     const info = GRADE_INFO[topClass];
+    const displayClass = topClass.replace('mutu', 'Mutu_');
 
     // Show result card
     resultCard.style.display = 'block';
     document.getElementById('result-grade-label').innerHTML =
-      `${topClass} <span>${info.name}</span>`;
+      `${displayClass} <span>${info.name}</span>`;
     document.getElementById('result-conf').textContent = topConf + '%';
     document.getElementById('grade-info-text').textContent = info.desc;
 
