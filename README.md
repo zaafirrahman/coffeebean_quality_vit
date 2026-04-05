@@ -4,7 +4,7 @@
 
 [![Dataset](https://img.shields.io/badge/Dataset-Kaggle-20BEFF?logo=kaggle)](https://www.kaggle.com/datasets/zaafirrahman/arabica-beans)
 [![Model](https://img.shields.io/badge/Model-HuggingFace-FFD21E?logo=huggingface)](https://huggingface.co/zaafirrahman)
-[![Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-222?logo=github)](https://zaafirrahman.github.io/coffeebean-quality-vit)
+[![Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-222?logo=github)](https://zaafirrahman.github.io/coffeebean-quality-vit/docs/index.html)
 [![Thesis](https://img.shields.io/badge/Thesis-PDF-red?logo=adobeacrobatreader)](https://github.com/zaafirrahman/coffeebean_quality_vit/releases/tag/v1.0.0)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 

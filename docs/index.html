@@ -50,10 +50,11 @@
   /* Header */
   header {
     border-bottom: 1px solid var(--border);
-    padding: 1.5rem 2.5rem;
+    padding: 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
     animation: fadeDown 0.6s ease both;
   }
 
@@ -71,9 +72,10 @@
 
   .logo-text {
     font-family: 'DM Serif Display', serif;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: var(--cream);
     letter-spacing: -0.01em;
+    /* white-space: nowrap; */
   }
 
   .logo-text span {
@@ -82,10 +84,11 @@
 
   .header-meta {
     font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.62rem;
     color: var(--muted);
     text-align: right;
-    line-height: 1.6;
+    white-space: nowrap;
+    line-height: 1.5;
   }
 
   /* Hero */
@@ -630,8 +633,9 @@
     <div class="logo-text">CoffeeBean <span>Quality Classifier</span></div>
   </div>
   <div class="header-meta">
-    ViT-B/16 · ImageNet Pretrained<br>
-    Arabica · SNI Standard · 6 Classes
+    ViT-B/16 · ImageNet<br>
+    Arabica · SNI-Standard<br>
+    2024 · TIP UB
   </div>
 </header>
 
@@ -680,42 +684,42 @@
             <img src="assets/sample-mutu1.jpg" alt="Mutu 1">
             <div class="sample-label">
               <div style="color:var(--amber)">mutu1</div>
-              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Specialty</div>
+              <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Specialty</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu2.jpg')">
             <img src="assets/sample-mutu2.jpg" alt="Mutu 2">
             <div class="sample-label">
               <div style="color:var(--amber)">mutu2</div>
-              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 1</div>
+              <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 1</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu3.jpg')">
             <img src="assets/sample-mutu3.jpg" alt="Mutu 3">
             <div class="sample-label">
               <div style="color:var(--amber)">mutu3</div>
-              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 2</div>
+              <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 2</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu4.jpg')">
             <img src="assets/sample-mutu4.jpg" alt="Mutu 4">
             <div class="sample-label">
               <div style="color:var(--amber)">mutu4</div>
-              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 3</div>
+              <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 3</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu5.jpg')">
             <img src="assets/sample-mutu5.jpg" alt="Mutu 5">
             <div class="sample-label">
               <div style="color:var(--amber)">mutu5</div>
-              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4a</div>
+              <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4a</div> -->
             </div>
           </div>
           <div class="sample-item" onclick="loadSample('assets/sample-mutu6.jpg')">
             <img src="assets/sample-mutu6.jpg" alt="Mutu 6">
                         <div class="sample-label">
               <div style="color:var(--amber)">mutu6</div>
-              <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4b</div>
+              <!-- <div style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Grade 4b</div> -->
             </div>
           </div>
         </div>
@@ -820,10 +824,27 @@
         <div class="about-item">
           <div class="about-item-label">Links</div>
           <div class="about-item-val">
-            <a href="https://github.com/zaafirrahman/coffeebean_quality_vit/releases" target="_blank">Thesis Article</a><br>
-            <a href="https://github.com/zaafirrahman/coffeebean_quality_vit" target="_blank">GitHub Repo</a><br>
-            <a href="https://huggingface.co/zaafirrahman/coffeebean-quality-vit" target="_blank">HuggingFace Hub</a><br>
-            <a href="https://www.kaggle.com/datasets/zaafirrahman/arabica-beans" target="_blank">Kaggle Dataset</a>
+            <div class="about-item-val">
+              <a href="https://github.com/zaafirrahman/coffeebean_quality_vit/releases" target="_blank">
+                <img src="assets/files.svg" width="16" style="vertical-align: middle; margin-right:6px;">
+                Thesis Article
+              </a><br>
+
+              <a href="https://github.com/zaafirrahman/coffeebean_quality_vit" target="_blank">
+                <img src="assets/github.svg" width="16" style="vertical-align: middle; margin-right:6px;">
+                GitHub Repo
+              </a><br>
+
+              <a href="https://huggingface.co/zaafirrahman/coffeebean-quality-vit" target="_blank">
+                <img src="assets/huggingface.svg" width="16" style="vertical-align: middle; margin-right:6px;">
+                HuggingFace Hub
+              </a><br>
+
+              <a href="https://www.kaggle.com/datasets/zaafirrahman/arabica-beans" target="_blank">
+                <img src="assets/kaggle.svg" width="16" style="vertical-align: middle; margin-right:6px;">
+                Kaggle Dataset
+              </a>
+            </div>
           </div>
         </div>
       </div>
