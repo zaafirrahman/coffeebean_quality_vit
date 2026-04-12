@@ -1,6 +1,6 @@
 {
   "name": "CoffeeBean Quality Classifier",
-  "short_name": "CoffeeBean",
+  "short_name": "Coffee ViT",
   "description": "Classify Arabica coffee bean quality using Vision Transformer based on Indonesian SNI standard",
   "start_url": ".",
   "display": "standalone",
