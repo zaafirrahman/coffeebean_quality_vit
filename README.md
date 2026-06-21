@@ -4,7 +4,7 @@
 
 [![Dataset](https://img.shields.io/badge/Dataset-Kaggle-20BEFF?logo=kaggle)](https://www.kaggle.com/datasets/zaafirrahman/arabica-beans)
 [![Model](https://img.shields.io/badge/Model-HuggingFace-FFD21E?logo=huggingface)](https://huggingface.co/zaafirrahman)
-[![Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-222?logo=github)](https://zaafirrahman.github.io/coffeebean_quality_vit)
+[![Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-222?logo=github)](https://coffeegrade-vit.pages.dev/)
 [![Thesis](https://img.shields.io/badge/Thesis-PDF-red?logo=adobeacrobatreader)](https://github.com/zaafirrahman/coffeebean_quality_vit/releases/tag/v1.0.0)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
@@ -36,12 +36,12 @@ This model classifies Arabica beans into **6 quality grades** based on the SNI d
 
 | Grade | Description |
 |---|---|
-| Specialty | 0 defects per 300g sample |
 | Grade 1 | Max 11 defect values |
 | Grade 2 | 12–25 defect values |
 | Grade 3 | 26–44 defect values |
-| Grade 4a | 45–60 defect values |
-| Grade 4b | 61–80 defect values |
+| Grade 4 | 45–60 defect values |
+| Grade 5 | 61–80 defect values |
+| Grade 6 | >80 defect values |
 
 ---
 
@@ -100,7 +100,7 @@ Pillow
 
 ## 🌐 Web Demo
 
-A live classification demo is available at **[zaafirrahman.github.io/coffeebean-quality-vit](https://zaafirrahman.github.io/coffeebean-quality-vit)** — upload a photo of Arabica beans and get instant quality classification, powered by the quantized ONNX model running entirely in-browser via `onnxruntime-web`. No server required.
+A live classification demo is available at **[coffeegrade-vit.pages.dev](https://coffeegrade-vit.pages.dev/)** — upload a photo of Arabica beans and get instant quality classification, powered by the quantized ONNX model running entirely in-browser via `onnxruntime-web`. No server required.
 
 ---
 
